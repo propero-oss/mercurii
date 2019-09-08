@@ -1,3 +1,14 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath group: 'cz.habarta.typescript-generator', name: 'typescript-generator-gradle-plugin', version: '2.16.538'
+    }
+}
+
+
 plugins {
     id 'org.springframework.boot' version '2.1.8.RELEASE'
     id 'io.spring.dependency-management' version '1.0.8.RELEASE'
@@ -20,15 +31,43 @@ configurations {
 
 repositories {
     mavenCentral()
+    jcenter()
+}
+
+apply plugin: 'cz.habarta.typescript-generator'
+apply plugin: 'io.spring.dependency-management'
+
+dependencyManagement {
+    imports {
+        mavenBom 'org.springframework.boot:spring-boot-dependencies:2.1.8.RELEASE'
+        mavenBom "io.crnk:crnk-bom:3.0.20190714142556"
+    }
 }
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.1.8.RELEASE'
+    compile 'io.crnk:crnk-setup-spring-boot2'
+    compile 'io.crnk:crnk-format-plain-json'
+    // https://mvnrepository.com/artifact/io.crnk/crnk-data-jpa
+    compile group: 'io.crnk', name: 'crnk-data-jpa', version: '3.0.20190714142556'
+    compile 'io.crnk:crnk-home'
+    // https://mvnrepository.com/artifact/com.google.guava/guava
+    compile group: 'com.google.guava', name: 'guava', version: '28.1-jre'
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'mysql:mysql-connector-java'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+generateTypeScript {
+    jsonLibrary = 'jackson2'
+    classes = [
+            'com.shuzzzle.mercurii.models.UserEntity'
+    ]
+    outputFile = 'build/sample.d.ts'
+    outputKind = 'global'
+    namespace = 'Rest';
 }
