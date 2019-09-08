@@ -11,6 +11,7 @@ import javax.sql.DataSource;
 public class MercuriiApplication {
 
     public static void main(String[] args) {
+        System.out.println(System.getProperty("CHICKEN213213"));
         SpringApplication.run(MercuriiApplication.class, args);
     }
 
