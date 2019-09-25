@@ -12,12 +12,13 @@ buildscript {
 plugins {
     id 'org.springframework.boot' version '2.1.8.RELEASE'
     id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+    id "org.sonarqube" version "2.7"
     id 'java'
 }
 
 group = 'com.shuzzzle'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
+sourceCompatibility = '8'
 
 configurations {
     developmentOnly
@@ -45,29 +46,37 @@ dependencyManagement {
 }
 
 dependencies {
+    developmentOnly("org.springframework.boot:spring-boot-devtools")
     implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.1.8.RELEASE'
+    // https://mvnrepository.com/artifact/org.springframework.security/spring-security-core
+    compile group: 'org.springframework.security', name: 'spring-security-core', version: '5.1.6.RELEASE'
+
+
+    // CRNK FRAMEWORK
     compile 'io.crnk:crnk-setup-spring-boot2'
-    compile 'io.crnk:crnk-format-plain-json'
     // https://mvnrepository.com/artifact/io.crnk/crnk-data-jpa
-    compile group: 'io.crnk', name: 'crnk-data-jpa', version: '3.0.20190714142556'
+    compile 'io.crnk:crnk-data-jpa'
     compile 'io.crnk:crnk-home'
+    compile 'io.crnk:crnk-core'
+
+
     // https://mvnrepository.com/artifact/com.google.guava/guava
     compile group: 'com.google.guava', name: 'guava', version: '28.1-jre'
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'mysql:mysql-connector-java'
-    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     annotationProcessor 'org.projectlombok:lombok'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 generateTypeScript {
     jsonLibrary = 'jackson2'
     classes = [
-            'com.shuzzzle.mercurii.models.UserEntity'
+            'com.shuzzzle.mercurii.model.UserEntity'
     ]
     outputFile = 'build/sample.d.ts'
     outputKind = 'global'
-    namespace = 'Rest';
+    namespace = 'Rest'
 }
